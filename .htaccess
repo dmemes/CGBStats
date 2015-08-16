@@ -1,0 +1,35 @@
+# DEVEOPMENT MODE
+# php_value display_errors on
+php_value display_errors off
+
+# SET CORRECT DIR INDEX
+DirectoryIndex index.php index.html
+
+# REWRITES
+RewriteEngine On
+
+# CLOUDFLARE HTTPS
+RewriteCond %{HTTP:CF-Visitor} '"scheme":"http"'
+RewriteRule ^.*$ https://%{HTTP_HOST}%{REQUEST_URI} [QSA,L]
+
+# TEMPLATES
+RewriteRule ^about$ index.php [QSA,L]
+RewriteRule ^global$ index.php [QSA,L]
+RewriteRule ^userstats$ index.php [QSA,L]
+RewriteRule ^mystats$ index.php [QSA,L]
+RewriteRule ^mylogs$ index.php [QSA,L]
+RewriteRule ^signup$ index.php [QSA,L]
+RewriteRule ^logout$ index.php [QSA,L]
+RewriteRule ^finduser$ index.php [QSA,L]
+
+# SHORTHANDS
+RewriteRule ^[0-9]{6}[A-Z]{2}$ imageredirect.php [L]
+RewriteRule ^[0-9]{4}$ userredirect.php [L]
+
+# ERRORS
+ErrorDocument 401 /index.php
+ErrorDocument 403 /index.php
+ErrorDocument 404 /index.php
+
+# COMPRESSION
+AddOutputFilterByType DEFLATE text/text text/plain text/html text/plain text/xml text/css application/x-javascript application/javascript application/json image/png image/x-icon image/icon image/jpeg
