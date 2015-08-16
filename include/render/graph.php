@@ -35,7 +35,7 @@ $CGBStats->graph->timeLabelFunction = function($val){
 		date_default_timezone_set("UTC");
 	$date = date("G:i", $val);
 	
-	$last = $CGBStats->graph->_lastTimeLabel = 0;
+	$last = $CGBStats->graph->_lastTimeLabel;
 	$CGBStats->graph->_lastTimeLabel = $val;
 	
 	if(intval(date("G", $val)) < intval(date("G", $last))){
