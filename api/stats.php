@@ -32,17 +32,30 @@
 	// get hourly stats
 	$all = $CGBStats->database->query("SELECT SUM(`gold`) AS `gold`, SUM(`elix`) AS `elix`, SUM(`delix`) AS `delix`, SUM(`trophy`) AS `trophy`, SUM(1) AS `raid`, SUM(`search`) AS `search` FROM `cgbstats_stats` WHERE `date` > DATE_SUB(NOW(), INTERVAL ? DAY) AND `userid`=? ORDER BY UNIX_TIMESTAMP(`date`) DESC", array($intervalDays, $userid));
 	
-	$timeInterval = $CGBStats->database->query("SELECT SUM(`range`) AS `time` FROM (SELECT ABS(d1 - d2) AS `range` FROM (SELECT MIN(UNIX_TIMESTAMP(T1.date)) AS `d1`, MIN(UNIX_TIMESTAMP(T2.date)) AS `d2` FROM (SELECT * FROM cgbstats_stats ORDER BY `date`) AS T1 INNER JOIN (SELECT * FROM cgbstats_stats ORDER BY `date`) AS T2 ON UNIX_TIMESTAMP(T1.date) > UNIX_TIMESTAMP(T2.date) - 7200 AND T1.userid = T2.userid WHERE UNIX_TIMESTAMP(T1.date) < UNIX_TIMESTAMP(T2.date) AND T1.userid = ? AND T1.date > DATE_SUB(NOW(), INTERVAL ? DAY) GROUP BY UNIX_TIMESTAMP(T1.date)) AS `temp`) AS `temp2`", array($userid, $intervalDays));
+	// deprecated, too slow
+	//$timeInterval = $CGBStats->database->query("SELECT SUM(`range`) AS `time` FROM (SELECT ABS(d1 - d2) AS `range` FROM (SELECT MIN(UNIX_TIMESTAMP(T1.date)) AS `d1`, MIN(UNIX_TIMESTAMP(T2.date)) AS `d2` FROM (SELECT * FROM cgbstats_stats ORDER BY `date`) AS T1 INNER JOIN (SELECT * FROM cgbstats_stats ORDER BY `date`) AS T2 ON UNIX_TIMESTAMP(T1.date) > UNIX_TIMESTAMP(T2.date) - 7200 AND T1.userid = T2.userid WHERE UNIX_TIMESTAMP(T1.date) < UNIX_TIMESTAMP(T2.date) AND T1.userid = ? AND T1.date > DATE_SUB(NOW(), INTERVAL ? DAY) GROUP BY UNIX_TIMESTAMP(T1.date)) AS `temp`) AS `temp2`", array($userid, $intervalDays));
+	
+	// begin new query to find total hours
+	$CGBStats->database->query("CREATE TEMPORARY TABLE IF NOT EXISTS T1(date DATETIME NOT NULL) ENGINE=memory", array());
+	$CGBStats->database->query("TRUNCATE TABLE T1", array());
+	$CGBStats->database->query("CREATE TEMPORARY TABLE IF NOT EXISTS T2(date DATETIME NOT NULL) ENGINE=memory", array());
+	$CGBStats->database->query("TRUNCATE TABLE T2", array());
+	
+	$CGBStats->database->query("INSERT INTO T1 SELECT `date` AS `date` FROM cgbstats_stats WHERE userid=? AND date > DATE_SUB(NOW(), INTERVAL ? DAY) ORDER BY `date`", array($userid, $intervalDays));
+	$CGBStats->database->query("INSERT INTO T2 SELECT `date` AS `date` FROM T1", array());
+	
+	$timeInterval = $CGBStats->database->query("SELECT SUM(r) AS time FROM (SELECT ABS(d1 - d2) AS r FROM (SELECT UNIX_TIMESTAMP(T1.date) AS d1, UNIX_TIMESTAMP(T2.date) AS d2 FROM T1 INNER JOIN T2 ON T1.date > DATE_SUB(T2.date, INTERVAL 2 HOUR) WHERE UNIX_TIMESTAMP(T1.date) < UNIX_TIMESTAMP(T2.date) GROUP BY UNIX_TIMESTAMP(T1.date)) AS s1) AS s2", array());
+	// end new query
 	
 	$allDates = $CGBStats->database->query("SELECT COUNT(`date`) AS `all` FROM `cgbstats_stats` WHERE userid = ? AND date > DATE_SUB(NOW(), INTERVAL ? DAY)", array($userid, $intervalDays));
 	$allDates = intval($allDates[0]['all']);
 	
-	$totals0 = array("gold" => 0, "elix" => 0, "delix" => 0, "trophy" => 0, "raid" => 0, "search" => 0);
+	$totals0 = array("gold", "elix", "delix", "trophy", "raid", "search");
 	$time = intval($timeInterval[0]['time']);
 	
 	$time = $time / 3600; // $time is now in hours
 	
-	foreach($totals0 as $key=>$value){
+	foreach($totals0 as $key){
 		if($time > 0)
 			$hourly["hourly-" . $key] = intval($all[0][$key]) / $time;
 		else if($allDates > 0)
