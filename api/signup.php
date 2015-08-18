@@ -3,11 +3,7 @@ include '../include/include.php';
 header("Content-Type: application/json");
 $CGBStats->disableCaching();
 if(isset($_SESSION['userid'])) die(json_encode(array("status"=>"error","message"=>"Already logged in")));
-if(!isset($_POST['token']) || $_POST['token'] !== $_SESSION['token']) die(json_encode(array("status"=>"error","message"=>"Stahp hacking")));
-
-function getHttpValue($key){
-	return isset($_SERVER[$key]) ? $_SERVER[$key] : "";
-}
+if(!isset($_COOKIE['token']) || $_COOKIE['token'] !== $_SESSION['token']) die(json_encode(array("status"=>"error","message"=>"Bad token", "extra"=>"bad_token")));
 
 try {
 	$res;
@@ -17,17 +13,13 @@ try {
 		$res = $CGBStats->database->query("SELECT * FROM `cgbstats_user` WHERE `apikey`=?", array($apikey));
 	} while(sizeof($res) > 0);
 	
-	$ua = getHttpValue('HTTP_USER_AGENT');
-	
-	// CLOUDFLARE VALUES
 	$ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
 	if($ip === NULL || $ip === "") $ip = $_SERVER['HTTP_X_REAL_IP'];
 	if($ip === NULL || $ip === "") $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-	// fallback, will not give correct ip if behind a reverse proxy like nginx
-	if($ip === NULL || $ip === "") $ip = $_SERVER['REMOTE_ADDR'];
-	$cfray = getHttpValue('HTTP_CF_RAY');
-	$cfcountry = getHttpValue('HTTP_CF_IPCOUNTRY');
 	
+	$ua = $_SERVER['HTTP_USER_AGENT'];
+	$cfray = $_SERVER['HTTP_CF_RAY'];
+	$cfcountry = $_SERVER['HTTP_CF_IPCOUNTRY'];
 	
 	$CGBStats->database->query("INSERT INTO `cgbstats_user` (`apikey`, `ip`, `ua`, `cfray`, `cfcountry`) VALUES (?, ?, ?, ?, ?)", array($apikey, $ip, $ua, $cfray, $cfcountry));
 	$res = $CGBStats->database->query("SELECT * FROM `cgbstats_user` WHERE `apikey`=?", array($apikey));

@@ -4,7 +4,7 @@ header("Content-Type: application/json");
 $CGBStats->disableCaching();
 if(isset($_SESSION['userid'])) die(json_encode(array("status"=>"error","message"=>"Already logged in")));
 if(!isset($_POST['apikey'])) die(json_encode(array("status"=>"error","message"=>"Malformed request")));
-if(!isset($_POST['token']) || $_POST['token'] !== $_SESSION['token']) die(json_encode(array("status"=>"error","message"=>"Stahp hacking","extra"=>"bad_token")));
+if(!isset($_COOKIE['token']) || $_COOKIE['token'] !== $_SESSION['token']) die(json_encode(array("status"=>"error","message"=>"Bad token","extra"=>"bad_token")));
 
 try {
 	if($CGBStats->authenticate($_POST['apikey'])){

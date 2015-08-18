@@ -46,27 +46,32 @@ $CGBStats->enableCaching(filemtime(__FILE__));
 	</style>
 	
 	<script>
-		CGBStats.account.token = <?php echo json_encode($_SESSION['token']); ?>;
 		$(".join-button").click(function(){
 			$(this).attr("disabled", "disabled").text("Joining...");
-			$.post("/api/signup.php", {token: CGBStats.account.token}, function(data){
-				console.log(data);
-				if(data.hasOwnProperty("userid") && data.hasOwnProperty("apikey")){
-					$(".join-cgbstats").html("You've joined CGBStats.<br/>Your user ID is: <strong>" + data.userid + "</strong><br/>Your API key is: <input type='text' value='"
-						+ data.apikey + "' /></strong><br/>Copy and save your API key somewhere safe. <strong>You'll need it to access your stats.</strong> Don't share your key with anyone.");
-					$(".account-tab").attr("data-href", "/logout").text("Log Out").removeClass("selected");
-					$(".instructions").slideDown();
-					$("input[type=text]").on("focus", function(){
-						this.select();
-						this.onmouseup = function() {
-							this.onmouseup = null;
-							return false;
-						};
-					});
-				} else {
+			$.get("/api/token.php", function(){
+				$.post("/api/signup.php", function(data){
+					console.log(data);
+					if(data.hasOwnProperty("userid") && data.hasOwnProperty("apikey")){
+						$(".join-cgbstats").html("You've joined CGBStats.<br/>Your user ID is: <strong>" + data.userid + "</strong><br/>Your API key is: <input type='text' value='"
+							+ data.apikey + "' /></strong><br/>Copy and save your API key somewhere safe. <strong>You'll need it to access your stats.</strong> Don't share your key with anyone.");
+						$(".account-tab").attr("data-href", "/logout").text("Log Out").removeClass("selected");
+						$(".instructions").slideDown();
+						$("input[type=text]").on("focus", function(){
+							this.select();
+							this.onmouseup = function() {
+								this.onmouseup = null;
+								return false;
+							};
+						});
+					} else {
+						if(data.hasOwnProperty("extra") && data.extra == "bad_token") location.reload(true);
+						$(".join-button").removeAttr("disabled").text("Join CGBStats");
+						$(".status").text("Whoops, we're having some problems right now. Try again later.");
+					}
+				}).fail(function(){
 					$(".join-button").removeAttr("disabled").text("Join CGBStats");
 					$(".status").text("Whoops, we're having some problems right now. Try again later.");
-				}
+				});
 			}).fail(function(){
 				$(".join-button").removeAttr("disabled").text("Join CGBStats");
 				$(".status").text("Whoops, we're having some problems right now. Try again later.");

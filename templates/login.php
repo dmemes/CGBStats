@@ -37,22 +37,27 @@
 	</style>
 	
 	<script>
-		CGBStats.account.token = <?php echo json_encode($_SESSION['token']); ?>;
 		$(".login-button").click(function(){
 			$(this).attr("disabled", "disabled").text("Logging in...");
-			$.post("/api/login.php", {token: CGBStats.account.token, apikey: $("#apikey").val()}, function(data){
-				console.log(data);
-				if(data.hasOwnProperty("status") && data.status === "success"){
-					$(".account-tab").attr("data-href", "/logout").text("Log Out").removeClass("selected");
-					CGBStats.nav.reload();
-				} else {
-					if(data.hasOwnProperty("extra") && data.extra == "bad_token"){
-						CGBStats.persist.sessionError = true;
+			
+			$.get("/api/token.php", function(){
+				$.post("/api/login.php", {apikey: $("#apikey").val()}, function(data){
+					console.log(data);
+					if(data.hasOwnProperty("status") && data.status === "success"){
+						$(".account-tab").attr("data-href", "/logout").text("Log Out").removeClass("selected");
 						CGBStats.nav.reload();
-					}
-					$(".login-button").removeAttr("disabled").text("Log In");
+					} else {
+						if(data.hasOwnProperty("extra") && data.extra == "bad_token"){
+							CGBStats.persist.sessionError = true;
+							CGBStats.nav.reload();
+						}
+						$(".login-button").removeAttr("disabled").text("Log In");
 					$(".status").text(data.message);
-				}
+					}
+				}).fail(function(){
+					$(".login-button").removeAttr("disabled").text("Log In");
+					$(".status").text("Whoops, we're having some problems right now. Try again later.");
+				});
 			}).fail(function(){
 				$(".login-button").removeAttr("disabled").text("Log In");
 				$(".status").text("Whoops, we're having some problems right now. Try again later.");

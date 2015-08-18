@@ -114,15 +114,13 @@
 	CGBStats.query.jlinqFuncs = ["ignoreCase","reverse","useCase","each","attach","join","assign","sort","equals","orEquals","orNotEquals","andEquals","andNotEquals","notEquals","starts","orStarts","orNotStarts","andStarts","andNotStarts","notStarts","ends","orEnds","orNotEnds","andEnds","andNotEnds","notEnds","contains","orContains","orNotContains","andContains","andNotContains","notContains","match","orMatch","orNotMatch","andMatch","andNotMatch","notMatch","type","orType","orNotType","andType","andNotType","notType","greater","orGreater","orNotGreater","andGreater","andNotGreater","notGreater","greaterEquals","orGreaterEquals","orNotGreaterEquals","andGreaterEquals","andNotGreaterEquals","notGreaterEquals","less","orLess","orNotLess","andLess","andNotLess","notLess","lessEquals","orLessEquals","orNotLessEquals","andLessEquals","andNotLessEquals","notLessEquals","between","orBetween","orNotBetween","andBetween","andNotBetween","notBetween","betweenEquals","orBetweenEquals","orNotBetweenEquals","andBetweenEquals","andNotBetweenEquals","notBetweenEquals","empty","orEmpty","orNotEmpty","andEmpty","andNotEmpty","notEmpty","is","orIs","orNotIs","andIs","andNotIs","notIs","min","max","sum","average","skip","take","skipTake","select","distinct","group","define","any","none","all","first","last","at","count","removed","where","or","and","not","andNot","orNot"];
 	
 	CGBStats.query.tableVals = ["bdelix", "belix", "bgold", "cdelix", "celix", "cgold", "ctrophy", "date", "delix", "elix", "gold", "search", "stars", "thlevel", "trophy", "userid"];
+	CGBStats.query.jlinqSource = <?php echo json_encode(file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/static/vendor/jlinq/jlinq-beta.js')); ?>;
 	
-	$.ajax({url:"/static/vendor/jlinq/jlinq-beta.js",dataType:"text"}).done(function(data){
-		CGBStats.query.jlinqSource = data;
-		$(".query-input").removeAttr("disabled");
+	$(".query-input").removeAttr("disabled");
 		
-		if(typeof window.Worker === 'undefined'){
-			$(".query-input").val("You are using an unsupported browser").attr("disabled", "disabled");
-		}
-	});
+	if(typeof window.Worker === 'undefined'){
+		$(".query-input").val("You are using an unsupported browser").attr("disabled", "disabled");
+	}
 	
 	$(".query-input").on("keydown", function(e){
 		if(e.which == 9 || e.which == 38 || e.which == 40 || e.which == 13) e.preventDefault();
