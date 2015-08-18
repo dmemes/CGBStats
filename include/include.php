@@ -24,7 +24,9 @@ $CGBStats->database->connect();
 
 // deal with session stuff
 ini_set("session.gc_maxlifetime", 3600 * 24 * 7);
-session_save_path(realpath($_SERVER['DOCUMENT_ROOT'] . '/session/'));
+ini_set('session.gc_probability', 10);
+ini_set('session.gc_divisor', 100);
+session_save_path(realpath($_SERVER['DOCUMENT_ROOT'] . '/session0/'));
 session_set_cookie_params(3600 * 24 * 7, "/", "." . $CGBStats->config->domain, FALSE, TRUE);
 session_name("CGBStatsSession");
 session_start();
@@ -106,8 +108,6 @@ $CGBStats->enableCachingWithData = function($timestamp, $data){
 	$if_modified_since = isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? $_SERVER['HTTP_IF_MODIFIED_SINCE'] : false;
 	if($if_modified_since !== FALSE) $if_modified_since = strtotime($if_modified_since);
 	$if_none_match = isset($_SERVER['HTTP_IF_NONE_MATCH']) ? $_SERVER['HTTP_IF_NONE_MATCH'] : false;
-	
-	//if($CGBStats->isDev()) var_dump(array($if_modified_since, $timestamp, $_SESSION['lastauthtime']));
 	
 	if ((($if_none_match && strpos($if_none_match, $etag) !== FALSE) || (!$if_none_match)) && ($if_modified_since && $if_modified_since >= $timestamp)){
 		http_response_code(304);
