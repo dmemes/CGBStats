@@ -4,9 +4,9 @@ $CGBStats->enableCaching(filemtime(__FILE__));
 ?>
 <div class="container">
 	<h1>About CGBStats.cf</h1>
-	<p>This website (CGBStats.cf or CGBStats) was made by <a href="https://gamebot.org/forums/user-45438.html" class="noajax" target="_blank">DankMemes</a> for <a href="https://gamebot.org/" class="noajax" target="_blank">GameBot.org</a> with inspiration from <a href="https://gamebot.org/forums/thread-6549.html?highlight=sql" target="_blank" class='noajax'>this post</a>.</p>
+	<p>This website (CGBStats.cf or CGBStats) was made by <a href="https://gamebot.org/forums/user-45438.html" class="noajax" target="_blank">DankMemes</a> for <a href="https://mybot.run/" class="noajax" target="_blank">MyBot.run</a> (formerly Clash Game Bot) with inspiration from <a href="https://mybot.run/forums/thread-6549.html?highlight=sql" target="_blank" class='noajax'>this post</a>.</p>
 	<h3>Contact</h3>
-	<p>Email: <a class='ob noajax'></a><br/><a href="https://gamebot.org/forums/user-45438.html" class="noajax" target="_blank">GameBot.org Profile</a></p>
+	<p>Email: <a class='ob noajax'></a><br/><a href="https://mybot.run/forums/user-45438.html" class="noajax" target="_blank">MyBot.run Profile</a></p>
 	<h3>Privacy</h3>
 	<p>CGBStats collects information from users as part of its intended purpose (to log and aggregate GameBot data), and for the purpose of analytics.</p>
 	<h4>Cookies</h3>
@@ -18,7 +18,7 @@ $CGBStats->enableCaching(filemtime(__FILE__));
 	<h4>Data Sent To CGBStats</h4>
 	<p>As part of its intended purpose, CGBStats collects and aggregates GameBot data, which is stored securely in a database on CGBStats servers. CGBStats uses this data to construct charts and calculate statistics for users.</p>
 	<h3>Resources</h3>
-	<p>CGBStats uses some icons, images, and fonts from the game <a href="http://supercell.com/en/games/clashofclans/" class="noajax" target="_blank">'Clash of Clans'</a> by <a href="http://supercell.com/" class="noajax" target="_blank">Supercell</a> and from the Clash of Clans bot at <a href="https://gamebot.org/" class="noajax" target="_blank">GameBot.org</a></p>
+	<p>CGBStats uses some icons, images, and fonts from the game <a href="http://supercell.com/en/games/clashofclans/" class="noajax" target="_blank">'Clash of Clans'</a> by <a href="http://supercell.com/" class="noajax" target="_blank">Supercell</a> and from the Clash of Clans bot at <a href="https://mybot.run/" class="noajax" target="_blank">MyBot.run</a></p>
 	<h3>Open Source Software</h3>
 	<p>The CGBStats site uses the following open source software:
 		<ul>

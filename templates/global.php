@@ -3,7 +3,10 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/include/include.php';
 $CGBStats->enableCaching(filemtime(__FILE__));
 ?>
 <div class="container">
-	<p>CGBStats.cf is a site for recording and displaying your Clash Game Bot data. You can get persistent statistics and graphs for your bot, and even generate dynamic graphs for your CGB forums signature. Interested? <a href="javascript: void(0);" data-href="/signup">Join CGBStats</a>.</p>
+	<h2 style="color:red;text-shadow:0px 0px 5px white;">Important!</h1>
+	<p style="color:red;text-shadow:0px 0px 5px white;">Clash Game Bot has rebranded to MyBot and is now located at <a href="http://mybot.run/" target="_blank">http://MyBot.run</a>. Head over there now to get the latest bot updates!</p>
+	<hr />
+	<p>CGBStats.cf is a site for recording and displaying your MyBot (formerly Clash Game Bot) data. You can get persistent statistics and graphs for your bot, and even generate dynamic graphs for your CGB forums signature. Interested? <a href="javascript: void(0);" data-href="/signup">Join CGBStats</a>.</p>
 	<hr />
 	<p>These are graphs of combined data from all CGBStats users for the last 48 hours (a bit like Clash Forecaster).</p>
 	<h2 class='category-header'>Display: <select class='category-select'></select></h2>
