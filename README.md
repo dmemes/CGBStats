@@ -1,5 +1,5 @@
 # CGBStats #
-Source for https://cgbstats.cf - a website and ClashGameBot mod to track and aggregate bot statistics.
+Source for https://cgbstats.cf - a website and [MyBot](http://mybot.run) (formerly ClashGameBot) mod to track and aggregate bot statistics.
 
 ## Contributing ##
 Feel free to send a pull request for anything you'd like to see changed! See the section below.
